@@ -5,6 +5,8 @@ SHELL:=/bin/bash
 CLEAR_LOG_ON_BOOT = 0
 # debug logging with xlog
 DEBUG_XLOG = 1
+# Enable on-screen debug output
+DEBUG_ON_SCREEN= 1
 # tweaks for the release build
 #ALPHARELEASE = 0.10
 
@@ -30,6 +32,9 @@ CFLAGS += -DCLEAR_LOG_ON_BOOT=1
 endif
 ifeq ($(DEBUG_XLOG), 1)
 CFLAGS += -DDEBUG_XLOG=1
+endif
+ifeq ($(DEBUG_ON_SCREEN), 1)
+CFLAGS += -DDEBUG_ON_SCREEN=1
 endif
 
 LDFLAGS := -EL -nostdlib -z max-page-size=32
@@ -213,7 +218,9 @@ clean:
 	-rm -f loader.elf loader.bin core.elf core.elf.map core_87000000
 	-rm -f bisrv.asd crc
 	-rm -f libretro_core.a
+ifneq ($(CORE),)
 	$(MAKE) -j$(NPROC) -C $(CORE) $(MAKEFILE) clean platform=sf2000
+endif
 
 .PHONY: all clean
 
